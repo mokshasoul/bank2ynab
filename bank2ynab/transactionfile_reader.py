@@ -98,7 +98,7 @@ def find_directory(filepath: str) -> str:
                 input_dir = winreg.QueryValueEx(key, dl_key)[0]
         else:
             # Linux, OSX
-            input_dir = Path.home() / 'Downloads'
+            input_dir = Path.home() / "Downloads"
     else:
         proper_file_path = Path(filepath)
         try:
