@@ -2,6 +2,7 @@ import codecs
 import logging
 import os
 import re
+from pathlib import Path
 from os import path
 
 import chardet
@@ -97,13 +98,17 @@ def find_directory(filepath: str) -> str:
                 input_dir = winreg.QueryValueEx(key, dl_key)[0]
         else:
             # Linux, OSX
-            userhome = os.path.expanduser("~")
-            input_dir = os.path.join(userhome, "Downloads")
+            input_dir = Path.home() / 'Downloads'
     else:
-        if not os.path.exists(filepath):
+        proper_file_path = Path(filepath)
+        try:
+            proper_file_path = proper_file_path.expanduser()
+        except RuntimeError:
+            proper_file_path = Path(filepath)
+        if not os.path.exists(proper_file_path):
             s = "Error: Input directory not found: {}"
             raise FileNotFoundError(s.format(filepath))
-        input_dir = filepath
+        input_dir = proper_file_path
     return input_dir
 
 
