@@ -5,12 +5,6 @@ from bank2ynab.ynab_api import apply_mapping, generate_name_id_list
 
 
 class TestYNAB_API(TestCase):
-    def setUp(self) -> None:
-        return super().setUp()
-
-    def tearDown(self) -> None:
-        return super().tearDown()
-
     @unittest.skip("Not tested yet.")
     def test_init(self):
         raise NotImplementedError

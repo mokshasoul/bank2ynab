@@ -1,9 +1,16 @@
+"""
+    Transaction file reader
+"""
+from __future__ import annotations
+
 import codecs
 import logging
 import os
+import platform
 import re
-from pathlib import Path
 from os import path
+from pathlib import Path
+from typing import List
 
 import chardet
 
@@ -15,7 +22,7 @@ def get_files(
     regex_active: bool,
     ext: str,
     prefix: str,
-) -> list[str]:
+) -> List[str]:
     """
     Returns list of files matching the specified search parameters.
 
@@ -35,21 +42,23 @@ def get_files(
     :rtype: list
     """
 
-    files: list[str] = list()
+    files: List[str] = []
     missing_dir = False
-    fpath = ""
-    if file_pattern != "":
+    fpath = find_directory("")
+    if file_pattern:
         try:
             fpath = find_directory(try_path)
         except FileNotFoundError:
             missing_dir = True
             fpath = find_directory("")
-        fpath = path.abspath(fpath)
+
+        fpath = fpath.absolute()
         try:
             directory_list = os.listdir(fpath)
         except FileNotFoundError:
             directory_list = os.listdir(".")
-        if regex_active is True:
+
+        if regex_active:
             files = [
                 path.join(fpath, f)
                 for f in directory_list
@@ -65,50 +74,56 @@ def get_files(
                 if f.startswith(file_pattern)
                 if prefix not in f
             ]
+
         if not files and missing_dir:
             logging.error(
-                f"\nFormat: {name}\n\n "
-                "Error: Can't find download path: "
-                f"{try_path}\nTrying default path instead:\t {fpath}"
+                "Format: %s\n\n"
+                "Error: Can't find download path:"
+                "%s\nTrying default path instead:\t %s",
+                name,
+                try_path,
+                fpath,
             )
+
     return files
 
 
-def find_directory(filepath: str) -> str:
+def find_directory(filepath: str) -> Path:
     """
     Finds the downloads directory for active user if filepath is not set.
 
     :param filepath: Filepath specified by the configuration file.
-    :type filepath: str
     :raises FileNotFoundError: Error raised if the filepath is invalid.
     :return: The desired directory to use.
-    :rtype: str
     """
-    if filepath == "":
-        if os.name == "nt":
-            # Windows
-            import winreg
-
-            shell_path = (
-                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion"
-                "\\Explorer\\Shell Folders"
-            )
-            dl_key = "{374DE290-123F-4565-9164-39C4925E467B}"
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, shell_path) as key:
-                input_dir = winreg.QueryValueEx(key, dl_key)[0]
-        else:
-            # Linux, OSX
-            input_dir = Path.home() / "Downloads"
-    else:
+    if filepath:
         proper_file_path = Path(filepath)
         try:
             proper_file_path = proper_file_path.expanduser()
         except RuntimeError:
             proper_file_path = Path(filepath)
-        if not os.path.exists(proper_file_path):
-            s = "Error: Input directory not found: {}"
-            raise FileNotFoundError(s.format(filepath))
-        input_dir = proper_file_path
+
+        if not proper_file_path.exists():
+            s = "Error: Input directory not found: {filepath}"
+            raise FileNotFoundError(s)
+
+        return proper_file_path
+
+    if platform.system() == "Windows":
+        # Windows
+        winreg = __import__("winreg")
+
+        shell_path = (
+            "SOFTWARE\\Microsoft\\Windows\\CurrentVersion"
+            "\\Explorer\\Shell Folders"
+        )
+        dl_key = "{374DE290-123F-4565-9164-39C4925E467B}"
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, shell_path) as key:
+            input_dir = winreg.QueryValueEx(key, dl_key)[0]
+    else:
+        # Linux, OSX
+        input_dir = Path.home() / "Downloads"
+
     return input_dir
 
 
@@ -122,13 +137,14 @@ def detect_encoding(filepath: str) -> str:
     """
     # First try to guess the encoding with chardet. Take it if the
     # confidence is >60% (randomly chosen)
+    # pylint: disable=invalid-name
     with open(filepath, "rb") as f:
         file_content = f.read()
         rslt = chardet.detect(file_content)
         conf, enc = rslt["confidence"], rslt["encoding"]
         if conf > 0.6:
             logging.info(
-                f"\tOpening file using encoding {enc} (confidence {conf})"
+                "\tOpening file using encoding %s (confidence %s)", enc, conf
             )
             return enc
 
@@ -241,7 +257,7 @@ def detect_encoding(filepath: str) -> str:
     )
     for enc in encodings:
         try:
-            logging.info(f"\tAttempting to open file using {enc} encoding...")
+            logging.info("\tAttempting to open file using %s encoding...", enc)
             with codecs.open(filepath, "r", encoding=enc) as f:
                 for line in f:
                     line.encode("utf-8")

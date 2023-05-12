@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 RESPONSE_CODES = {
     "400": (
         "Bad syntax or validation error. The request could not be understood"

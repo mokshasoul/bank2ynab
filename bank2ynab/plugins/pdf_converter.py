@@ -1,9 +1,10 @@
 import logging
+from typing import List
 
-import bank_handler
 import pandas as pd
 import pdfplumber
-from bank_handler import BankHandler
+from bank2ynab import bank_handler
+from bank2ynab.bank_handler import BankHandler
 
 
 class PDF_Converter(BankHandler):
@@ -44,7 +45,7 @@ class PDF_Converter(BankHandler):
 
 
 def read_pdf_to_dataframe(
-    pdf_path: str, table_cols: list[str]
+    pdf_path: str, table_cols: List[str]
 ) -> pd.DataFrame:
     """
     Reads the main table from each page of a PDF and

@@ -8,7 +8,8 @@
 # At that point, you can reference the plugin in conf files like this:
 #   Plugin = mymodule
 
-from bank_handler import BankHandler
+from typing import Optional
+from bank2ynab.bank_handler import BankHandler
 
 
 class NullBank(BankHandler):
@@ -21,7 +22,7 @@ class NullBank(BankHandler):
         super().__init__(config_dict)
         self.name = "NullBank"
 
-    def _preprocess_file(self, file_path: str, plugin_args: list) -> str:
+    def _preprocess_file(self, file_path: str, *args, **kwargs) -> str:
         """
         This is probably the only method you really want to override.
         exists solely to be used by plugins for pre-processing a file
@@ -31,7 +32,7 @@ class NullBank(BankHandler):
         # intentionally empty - plugins can use this function
         return file_path
 
-    def read_data(self, file_path):
+    def read_data(self, file_path: Optional[str] = None):
         """
         Implement any custom parsing logic in here.
         :param file_path: absolute path to source file

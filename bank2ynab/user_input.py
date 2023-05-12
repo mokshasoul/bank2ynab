@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+import logging
+
+
 def get_user_input(options: list, msg: str) -> str:
     """
     Used to select from a list of options.
@@ -6,6 +11,7 @@ def get_user_input(options: list, msg: str) -> str:
 
     :param options: list of [name, option] pairs to select from
     :param msg: the message to display on the input line
+
     :return option_selected: the selected item from the list
     """
 
@@ -19,23 +25,24 @@ def get_user_input(options: list, msg: str) -> str:
 
 
 def display_options(options: list):
-    print("\n")
+    logging.info("\n")
     for index, option in enumerate(options):
-        print(f"| {index+1} | {option[0]}")
+        logging.info("| %s | %s", index + 1, option[0])
 
 
-def get_int_input(min: int, max: int, msg: str) -> int:
+def get_int_input(min_val: int, max_val: int, msg: str) -> int:
     """
     Makes a user select an integer between min & max stated values
-    :param  min: the minimum acceptable integer value
-    :param  max: the maximum acceptable integer value
+    :param  min_val: the minimum acceptable integer value
+    :param  max_val: the maximum acceptable integer value
     :param  msg: the message to display on the input line
+
     :return user_input: sanitised integer input in acceptable range
     """
     while True:
         try:
-            user_input = int(input(f"{msg} (range {min} - {max}): "))
-            if user_input not in range(min, max + 1):
+            user_input = int(input(f"{msg} (range {min_val} - {max_val}): "))
+            if user_input not in range(min_val, max_val + 1):
                 raise ValueError
             break
         except ValueError:

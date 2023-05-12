@@ -1,147 +1,142 @@
+"""
+    bank2ynab API acess
+"""
+from __future__ import annotations
+
 import logging
+from typing import Dict
 
 import requests
-from ynab_api_response import YNABError
+
+from bank2ynab.ynab_api_response import YNABError
 
 
 class APIInterface:
     def __init__(self, api_token: str) -> None:
         # dict mapping {budget_id: {budget_params}}
-        self.budget_info: dict[str, dict] = dict()
-        logging.info("Attempting to connect to YNAB API...")
-        if api_token is not None:
-            logging.info("Obtaining budget and account data...")
+        self.budget_info: Dict[str, dict] = {}
+        self.logger = logging.getLogger("bank2ynab")
+
+        self.logger.info("Attempting to connect to YNAB API...")
+        if api_token:
+            self.api_token = api_token
+            self.logger.info("Obtaining budget and account data...")
             # create budget parameter dictionary
-            budget_dict = get_budgets(api_token=api_token)
+            budget_dict = self.get_budgets()
             # add accounts dictionary to each budget in dict
-            for budget_id in budget_dict.keys():
-                budget_accounts = get_budget_accounts(
-                    api_token=api_token, budget_id=budget_id
-                )
-                budget_dict[budget_id]["accounts"] = budget_accounts
+            for budget_id, budget in budget_dict.items():
+                budget_accounts = self.get_budget_accounts(budget_id=budget_id)
+                budget["accounts"] = budget_accounts
+
             self.budget_info = budget_dict
-            logging.info("All budget and account data obtained.")
+            self.logger.info("All budget and account data obtained.")
         else:
-            logging.info("No API-token provided.")
+            self.logger.error("No API-token provided.")
+            raise ValueError("Empty API token")
 
+    def access_api(
+        self,
+        *,
+        budget_id: str,
+        keyword: str,
+        method: str,
+        data: Dict,
+    ) -> Dict:
+        base_url = "https://api.youneedabudget.com/v1/budgets/"
+        params = {"access_token": self.api_token}
 
-def access_api(
-    api_token: str, budget_id: str, keyword: str, method: str, data: dict
-) -> dict:
-    base_url = "https://api.youneedabudget.com/v1/budgets/"
+        if budget_id:
+            url = f"{base_url}{budget_id}/{keyword}"
+        else:
+            # only happens when we're looking for the list of budgets
+            url = base_url
 
-    if budget_id == "":
-        # only happens when we're looking for the list of budgets
-        url = base_url + f"?access_token={api_token}"
-    else:
-        url = base_url + f"{budget_id}/{keyword}?access_token={api_token}"
+        if method == "post":
+            self.logger.info("Sending '%s' data to YNAB API...", keyword)
+            response = requests.post(url, params=params, json=data, timeout=30)
+        else:
+            self.logger.info("Reading '%s' data from YNAB API...", keyword)
+            response = requests.get(url, params=params, timeout=30)
 
-    if method == "post":
-        logging.info(f"\tSending '{keyword}' data to YNAB API...")
+        response_data = {}
 
-        response = requests.post(url, json=data)
-    else:
-        logging.info(f"\tReading '{keyword}' data from YNAB API...")
-        response = requests.get(url)
+        if response.status_code != 200:
+            response_data = response.json()["data"]
+            return response_data
+            # the API has returned an error so let's handle it
 
-    response_data = dict()
-    try:
-        response_data = response.json()["data"]
-    except KeyError:
-        # the API has returned an error so let's handle it
-        error_json = response.json()["error"]
-        raise YNABError(error_json["id"], error_json["detail"]) from None
-    return response_data
+        raise YNABError(str(response.status_code), response.text)
 
+    def api_read(self, *, budget_id: str, keyword: str) -> dict:
+        return_data = {}
+        try:
+            return_data = self.access_api(
+                budget_id=budget_id,
+                keyword=keyword,
+                method="get",
+                data={},
+            )
+        except YNABError as err:
+            self.logger.error("YNAB API Error: %s", err)
 
-def api_read(api_token: str, budget_id: str, keyword: str) -> dict:
-    return_data = dict()
-    try:
-        return_data = access_api(
-            api_token=api_token,
-            budget_id=budget_id,
-            keyword=keyword,
-            method="get",
-            data={},
-        )
-    except YNABError as e:
-        logging.error(f"YNAB API Error: {e}")
-    return return_data[keyword]
+        return return_data[keyword]
 
+    def post_transactions(self, *, budget_id: str, data: dict) -> None:
+        """
+        Send transaction data to YNAB via API call
 
-def post_transactions(api_token: str, budget_id: str, data: dict) -> None:
-    """
-    Send transaction data to YNAB via API call
+        :param api_token: API token to access YNAB API
+        :param budget_id: id of budget to post transactions to
+        :param data: transaction data in json format
+        """
 
-    :param api_token: API token to access YNAB API
-    :type api_token: str
-    :param budget_id: id of budget to post transactions to
-    :type budget_id: str
-    :param data: transaction data in json format
-    :type data: str
-    """
+        self.logger.info("Uploading transactions to YNAB...")
+        try:
+            response = self.access_api(
+                budget_id=budget_id,
+                keyword="transactions",
+                method="post",
+                data=data,
+            )
+            self.logger.info(
+                "Success:\n %s entries uploaded,\n %s entries skipped.",
+                len(response["transaction_ids"]),
+                len(response["duplicate_import_ids"]),
+            )
+        except YNABError as err:
+            self.logger.error("YNAB API Error: %s", err)
 
-    logging.info("Uploading transactions to YNAB...")
-    try:
-        response = access_api(
-            api_token=api_token,
-            budget_id=budget_id,
-            keyword="transactions",
-            method="post",
-            data=data,
-        )
-        logging.info(
-            f"Success: {len(response['transaction_ids'])}"
-            " entries uploaded,"
-            f" {len(response['duplicate_import_ids'])}"
-            " entries skipped."
-        )
-    except YNABError as e:
-        logging.error(f"YNAB API Error: {e}")
+    def get_budget_accounts(self, *, budget_id: str) -> Dict[str, Dict]:
+        """
+        Returns dictionary matching account id to list of account parameters.
 
+        :param api_token: API token to access YNAB API
+        :param budget_id: budget ID to read account data from
+        :return: dictionary mapping account id to parameters
+        """
+        accounts = self.api_read(budget_id=budget_id, keyword="accounts")
+        return APIInterface.fix_id_based_dicts(accounts)
 
-def fix_id_based_dicts(input_data: dict) -> dict[str, dict]:
-    """
-    Combines response data JSON into a dictionary mapping ID to response data.
+    def get_budgets(self) -> Dict[str, Dict]:
+        """
+        Returns dictionary matching budget id to list of budget parameters.
 
-    :param input_data: JSON-style dictionary
-    :type input_data: dict
-    :return: dictionary mapping "id" to response data
-    :rtype: dict[str, dict]
-    """
-    output_dict = dict()
-    for sub_dict in input_data:
-        output_dict.setdefault(sub_dict["id"], sub_dict)
-    return output_dict
+        :param api_token: API token to access YNAB API
+        :return: dictionary mapping budget id to parameters
+        """
+        budgets = self.api_read(budget_id="", keyword="budgets")
+        return APIInterface.fix_id_based_dicts(budgets)
 
+    @staticmethod
+    def fix_id_based_dicts(input_data: Dict) -> Dict[str, Dict]:
+        """
+        Combines response data JSON into a dictionary mapping ID to response data.
 
-def get_budget_accounts(api_token: str, budget_id: str) -> dict[str, dict]:
-    """
-    Returns dictionary matching account id to list of account parameters.
+        :param input_data: JSON-style dictionary
+        :return: dictionary mapping "id" to response data
+        """
+        output_dict: Dict[str, Dict] = {}
+        for sub_dict in input_data:
+            output_dict.setdefault(sub_dict["id"], sub_dict)
 
-    :param api_token: API token to access YNAB API
-    :type api_token: str
-    :param budget_id: budget ID to read account data from
-    :type budget_id: str
-    :return: dictionary mapping account id to parameters
-    :rtype: dict[str, dict]
-    """
-    accounts = api_read(
-        api_token=api_token, budget_id=budget_id, keyword="accounts"
-    )
-    return fix_id_based_dicts(accounts)
-
-
-def get_budgets(
-    api_token: str,
-) -> dict[str, dict]:
-    """
-    Returns dictionary matching budget id to list of budget parameters.
-
-    :param api_token: API token to access YNAB API
-    :type api_token: str
-    :return: dictionary mapping budget id to parameters
-    :rtype: dict[str, dict[str, str]]
-    """
-    budgets = api_read(api_token=api_token, budget_id="", keyword="budgets")
-    return fix_id_based_dicts(budgets)
+        return output_dict

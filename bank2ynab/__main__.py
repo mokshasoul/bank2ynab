@@ -1,43 +1,59 @@
+"""
+    main bank2ynab module
+"""
 import importlib
+import argparse
 import logging
-from typing import Any
+from typing import Any, Dict, List
 
-from bank_handler import BankHandler
-from config_handler import ConfigHandler
-from ynab_api import YNAB_API
+from bank2ynab.bank_handler import BankHandler
+from bank2ynab.config_handler import ConfigHandler
+from bank2ynab.ynab_api import YNAB_API
 
 # configure our logger
 logging.basicConfig(format="%(levelname): %(message)", level=logging.INFO)
 
 
-def build_bank(bank_config: dict[str, Any]) -> BankHandler:
+def build_bank(bank_config: Dict[str, Any]) -> BankHandler:
     """Factory method loading the correct class
     for a given configuration."""
     plugin_module_name = bank_config.get("plugin", None)
     if plugin_module_name:
         module = importlib.import_module(f"plugins.{plugin_module_name}")
         if not hasattr(module, "build_bank"):
-            s = (
+            err_msg = (
                 f"The specified plugin {plugin_module_name}.py "
                 "does not contain the required build_bank(config) method."
             )
-            raise ImportError(s)
+            raise ImportError(err_msg)
         bank = module.build_bank(bank_config)
         return bank
-    else:
-        return BankHandler(config_dict=bank_config)
+
+    return BankHandler(config_dict=bank_config)
 
 
 # Let's run this thing!
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        prog="bank2ynab",
+        description="Imports bank csv exports into YNAB",
+    )
+    parser.add_argument("-v", "--verbose", action="store_true")
+    logger = logging.getLogger("bank2ynab")
+
+    args = parser.parse_args()
+
+    if args.verbose:
+        logger.setLevel(logging.DEBUG)
+    logger.debug("Hello I'm debugging")
+
     try:
         config_handler = ConfigHandler()
     except FileNotFoundError:
         logging.error("No configuration file found, process aborted.")
-        pass
     else:
         # generate list of bank objects to process
-        bank_obj_list: list[BankHandler] = []
+        bank_obj_list: List[BankHandler] = []
         for bank_params in config_handler.config.sections():
             config_dict = config_handler.fix_conf_params(bank_params)
             # create bank object using config (allows for plugin use)
@@ -46,7 +62,7 @@ if __name__ == "__main__":
 
         # initialize variables for summary:
         files_processed = 0
-        bank_transaction_dict: dict[str, list] = dict()
+        bank_transaction_dict: Dict[str, list] = {}
         # process account for each config entry
         for bank_object in bank_obj_list:
             bank_object.run()
@@ -55,8 +71,8 @@ if __name__ == "__main__":
                     bank_object.name
                 ] = bank_object.transaction_list
             files_processed += bank_object.files_processed
-        logging.info(
-            f"\nFile processing complete! {files_processed} files processed.\n"
+        logger.info(
+            "File processing complete! %s files processed.", files_processed
         )
 
         if bank_transaction_dict:
