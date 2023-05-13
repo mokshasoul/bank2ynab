@@ -77,4 +77,7 @@ if __name__ == "__main__":
 
         if bank_transaction_dict:
             api = YNAB_API(config_handler)
-            api.run(bank_transaction_dict)
+            try:
+                api.run(bank_transaction_dict)
+            except NotImplementedError:
+                logger.error("No API key given, not uploading transaction data")

@@ -7,41 +7,60 @@ from typing import Any, Dict, List
 
 
 class ConfigHandler:
-    def __init__(self, *, user_mode: bool = False) -> None:
-        self.user_mode = user_mode
+    logger = logging.getLogger("bank2ynab")
 
-        self.logger = logging.getLogger("bank2ynab")
+    def __init__(self) -> None:
+        """
+        This class instantiates a config handler
+        tha reads bank2ynab.conf and if specified the
+        user_configuration.conf file.
 
-        path = Path(__file__).resolve()
-        parent_dir = path.parent
-        project_dir = parent_dir.parent
+        It handles reading, updating and cleaning the configuration
+        """
 
+        project_dir = Path(__file__).resolve().parent.parent
         self.bank_conf_path = project_dir / "bank2ynab.conf"
         self.user_conf_path = project_dir / "user_configuration.conf"
 
-        self.get_configs()
+        self.config = configparser.ConfigParser(interpolation=None)
+        if self.bank_conf_path.exists():
+            with open(self.bank_conf_path, encoding="utf-8") as f:
+                self.config.read_file(f)
 
-    def get_configs(self) -> None:
+        self.user_config = configparser.ConfigParser(interpolation=None)
+        if self.user_conf_path.exists():
+            self.user_config.read(self.user_conf_path)
+            self.config.read(self.user_conf_path)
+
+    @staticmethod
+    def get_configs(conf_path: Path) -> configparser.RawConfigParser:
         """Retrieve all configuration parameters."""
-
-        conf_files: List[Path] = []
-
-        if not self.user_mode:
-            conf_files.append(self.bank_conf_path)
-
-        conf_files.append(self.user_conf_path)
-        conf_file = conf_files[0]
-
-        if not conf_file.exists():
-            self.logger.error(
-                "Configuration file not found: %s", str(conf_file.absolute())
+        if not conf_path.exists():
+            ConfigHandler.logger.error(
+                "Configuration file not found: %s", str(conf_path.absolute())
             )
-            raise FileNotFoundError(
-                f"Configuration file not found {conf_file}"
-            )
+            raise FileNotFoundError(f"Configuration file not found {conf_path}")
 
-        self.config = configparser.RawConfigParser()
-        self.config.read(conf_files, encoding="utf-8")
+        config = configparser.RawConfigParser()
+        config.read(conf_path, encoding="utf-8")
+
+        return config
+
+    def save_account_selection(self, bank, budget_id, account_id):
+        """
+        saves YNAB account to use for each bank
+        """
+        try:
+            self.user_config.add_section(bank)
+            logging.info("Saving default account for %s...", bank)
+        except configparser.DuplicateSectionError:
+            self.logger.warning("%s bank is already mapped to another account")
+
+        self.user_config.set(bank, "YNAB Account ID", f"{budget_id}||{account_id}")
+        with open(self.user_conf_path, "w", encoding="utf-8") as config_file:
+            self.user_config.write(config_file)
+
+        self.config.update(self.user_config)
 
     def fix_conf_params(self, section: str) -> Dict[str, Any]:
         """
@@ -58,12 +77,8 @@ class ConfigHandler:
 
         bank_config = {
             "bank_name": section,
-            "input_columns": self.get_config_line_lst(
-                section, "Input Columns", ","
-            ),
-            "output_columns": self.get_config_line_lst(
-                section, "Output Columns", ","
-            ),
+            "input_columns": self.get_config_line_lst(section, "Input Columns", ","),
+            "output_columns": self.get_config_line_lst(section, "Output Columns", ","),
             "api_columns": self.get_config_line_lst(
                 section, "API Transaction Fields", ","
             ),
@@ -71,16 +86,10 @@ class ConfigHandler:
                 section, "Source Filename Pattern"
             ),
             "path": self.get_config_line_str(section, "Source Path"),
-            "ext": self.get_config_line_str(
-                section, "Source Filename Extension"
-            ),
+            "ext": self.get_config_line_str(section, "Source Filename Extension"),
             "encoding": self.get_config_line_str(section, "Encoding"),
-            "regex": self.get_config_line_boo(
-                section, "Use Regex For Filename"
-            ),
-            "fixed_prefix": self.get_config_line_str(
-                section, "Output Filename Prefix"
-            ),
+            "regex": self.get_config_line_boo(section, "Use Regex For Filename"),
+            "fixed_prefix": self.get_config_line_str(section, "Output Filename Prefix"),
             "output_ext": self.get_config_line_str(
                 section, "Output Filename Extension"
             ),
@@ -90,28 +99,16 @@ class ConfigHandler:
             "header_rows": self.get_config_line_int(section, "Header Rows"),
             "footer_rows": self.get_config_line_int(section, "Footer Rows"),
             "date_format": self.get_config_line_str(section, "Date Format"),
-            "date_dedupe": self.get_config_line_boo(
-                section, "Date De-Duplication"
-            ),
-            "delete_original": self.get_config_line_boo(
-                section, "Delete Source File"
-            ),
+            "date_dedupe": self.get_config_line_boo(section, "Date De-Duplication"),
+            "delete_original": self.get_config_line_boo(section, "Delete Source File"),
             "cd_flags": self.get_config_line_lst(
                 section, "Inflow or Outflow Indicator", ","
             ),
-            "payee_to_memo": self.get_config_line_boo(
-                section, "Use Payee for Memo"
-            ),
+            "payee_to_memo": self.get_config_line_boo(section, "Use Payee for Memo"),
             "plugin": self.get_config_line_str(section, "Plugin"),
-            "plugin_args": self.get_config_line_lst(
-                section, "Plugin Arguments", "\n"
-            ),
-            "api_token": self.get_config_line_str(
-                section, "YNAB API Access Token"
-            ),
-            "api_account": self.get_config_line_lst(
-                section, "YNAB Account ID", "|"
-            ),
+            "plugin_args": self.get_config_line_lst(section, "Plugin Arguments", "\n"),
+            "api_token": self.get_config_line_str(section, "YNAB API Access Token"),
+            "api_account": self.get_config_line_lst(section, "YNAB Account ID", "|"),
             "currency_mult": self.get_config_line_flt(
                 section, "Currency Conversion Factor"
             ),
@@ -175,5 +172,7 @@ class ConfigHandler:
         :param param: parameter to obtain from section
         :return: value matching parameter
         """
+        if self.config.has_option(section_name, param):
+            return self.config.get(section_name, param).split(splitter)
 
-        return self.config.get(section_name, param).split(splitter)
+        return self.config.get("DEFAULT", param).split(splitter)

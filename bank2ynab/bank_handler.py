@@ -7,7 +7,6 @@ import logging
 import os
 import traceback
 from pathlib import Path
-from os import path
 from typing import Any, List, Dict
 
 from bank2ynab import dataframe_handler, transactionfile_reader
@@ -105,9 +104,7 @@ class BankHandler:
                         )
                         os.remove(src_file)
                 else:
-                    self.logger.info(
-                        "No output data from this file for this bank."
-                    )
+                    self.logger.info("No output data from this file for this bank.")
         # don't add empty transaction dataframes
         if file_dfs:
             combined_df = dataframe_handler.combine_dfs(file_dfs)
@@ -134,8 +131,8 @@ def get_output_path(input_path: str, prefix: str, ext: str) -> Path:
     :param path: path to output file
     :return: target filename
     """
-    target_dir = Path(input_path)
-    target_fname = path.basename(input_path)[:-4]
+    target_dir = Path(input_path).parent
+    target_fname = Path(input_path).stem
 
     new_filename = f"{prefix}{target_fname}{ext}"
     new_path = target_dir / new_filename
