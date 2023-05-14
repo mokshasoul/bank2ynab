@@ -3,12 +3,6 @@ from unittest import TestCase
 
 
 class TestDataframeHandler(TestCase):
-    def setUp(self) -> None:
-        return super().setUp()
-
-    def tearDown(self) -> None:
-        return super().tearDown()
-
     @unittest.skip("Not tested yet.")
     def test_pdf_converter_class(self):
         raise NotImplementedError

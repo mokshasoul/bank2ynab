@@ -32,20 +32,6 @@ class ConfigHandler:
             self.user_config.read(self.user_conf_path)
             self.config.read(self.user_conf_path)
 
-    @staticmethod
-    def get_configs(conf_path: Path) -> configparser.RawConfigParser:
-        """Retrieve all configuration parameters."""
-        if not conf_path.exists():
-            ConfigHandler.logger.error(
-                "Configuration file not found: %s", str(conf_path.absolute())
-            )
-            raise FileNotFoundError(f"Configuration file not found {conf_path}")
-
-        config = configparser.RawConfigParser()
-        config.read(conf_path, encoding="utf-8")
-
-        return config
-
     def save_account_selection(self, bank, budget_id, account_id):
         """
         saves YNAB account to use for each bank

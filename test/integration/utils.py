@@ -1,18 +1,17 @@
-from os.path import dirname, join, realpath
+import configparser
+from os import path
 
 PRODPATH = "bank2ynab.conf"
-TESTCONFPATH = join("test-data", "test.conf")
+TESTCONFPATH = path.join("test-data", "test.conf")
 
 
 def get_test_confparser():
-    import configparser
-
     cp = configparser.RawConfigParser()
     # convert our paths into absolutes
 
     project_dir = get_project_dir()
-    prodpath = join(project_dir, PRODPATH)
-    testconfpath = join(project_dir, TESTCONFPATH)
+    prodpath = path.join(project_dir, PRODPATH)
+    testconfpath = path.join(project_dir, TESTCONFPATH)
 
     # first read prod to get all defaults
     cp.read([prodpath])
@@ -25,5 +24,5 @@ def get_test_confparser():
 
 
 def get_project_dir():
-    path = realpath(__file__)
-    return dirname(dirname(path))
+    ppath = path.realpath(__file__)
+    return path.dirname(path.dirname(ppath))

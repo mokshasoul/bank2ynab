@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     if args.verbose:
         logger.setLevel(logging.DEBUG)
-    logger.debug("Hello I'm debugging")
+        logger.debug("%s DEBUG LOGGING ACTIVE %s", "-" * 8, "-" * 8)
 
     try:
         config_handler = ConfigHandler()
@@ -67,13 +67,9 @@ if __name__ == "__main__":
         for bank_object in bank_obj_list:
             bank_object.run()
             if bank_object.transaction_list:
-                bank_transaction_dict[
-                    bank_object.name
-                ] = bank_object.transaction_list
+                bank_transaction_dict[bank_object.name] = bank_object.transaction_list
             files_processed += bank_object.files_processed
-        logger.info(
-            "File processing complete! %s files processed.", files_processed
-        )
+        logger.info("File processing complete! %s files processed.", files_processed)
 
         if bank_transaction_dict:
             api = YNAB_API(config_handler)

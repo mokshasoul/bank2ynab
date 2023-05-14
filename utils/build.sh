@@ -9,12 +9,12 @@ get_input ()
     echo "I didn't get 2 parameters. Exiting." ; exit
   else
     while true; do
-      read -p "$1 Press 'Y' to continue, or any other key to skip: " -n 1 response
+      read -rp "$1 Press 'Y' to continue, or any other key to skip: " -n 1 response
       case $response in
         [Yy]* )
           $2
           result=$?
-          if [ $result -eq ""0"" ]; then
+          if [ $result -eq "0" ]; then
             echo "--OK--"
             break
           else
@@ -28,10 +28,10 @@ get_input ()
   fi
 }
 # remove old build files:
-if [ -f ""dist/*"" ]
-    then
-      echo "rm..."
-      rm dist/*
+if [ -f "dist/" ]
+then
+  echo "rm..."
+  rm "dist/*"
 fi
 # do the actual work:
 get_input "Are you ready to BUILD the package?" "python setup.py bdist_wheel"

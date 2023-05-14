@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+logger = logging.getLogger("bank2ynab")
+
 
 def get_user_input(options: list, msg: str) -> str:
     """
@@ -46,10 +48,22 @@ def get_int_input(min_val: int, max_val: int, msg: str) -> int:
                 raise ValueError
             break
         except ValueError:
+            logger.error(
+                """
+            %s is not a number within the accepted range %s - %s
+            please try again
+            """,
+                user_input,
+                min_val,
+                max_val,
+            )
             print(
                 "The value entered is not an integer in the acceptable"
                 " range, please enter a different value!"
             )
+            continue
+        except TypeError:
+            logger.error("%s was not a number, please try again", user_input)
             continue
 
     return user_input

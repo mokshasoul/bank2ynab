@@ -60,12 +60,11 @@ class APIInterface:
 
         response_data = {}
 
-        if response.status_code != 200:
-            response_data = response.json()["data"]
-            return response_data
-            # the API has returned an error so let's handle it
+        if response.status_code >= 300:
+            raise YNABError(str(response.status_code), response.text)
 
-        raise YNABError(str(response.status_code), response.text)
+        response_data = response.json()["data"]
+        return response_data
 
     def api_read(self, *, budget_id: str, keyword: str) -> dict:
         return_data = {}
