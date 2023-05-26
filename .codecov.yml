@@ -12,16 +12,16 @@ coverage:
       default:
         # basic
         target: auto
-        threshold: 5
+        threshold: "5%"
         base: auto
         # advanced
-        branches: null
+        branches: ["master", "develop"]
         if_no_uploads: error
         if_not_found: success
         if_ci_failed: error
         only_pulls: false
-        flags: null
-        paths: null
+        flags: []
+        paths: []
     patch:
       default:
         # basic
@@ -36,7 +36,7 @@ coverage:
         only_pulls: false
         flags: null
         paths: null
-    changes: no
+    changes: false
 
 parsers:
   gcov:
@@ -49,4 +49,4 @@ parsers:
 comment:
   layout: "header, diff"
   behavior: default
-  require_changes: no
+  require_changes: false

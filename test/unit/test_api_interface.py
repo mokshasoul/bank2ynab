@@ -4,12 +4,6 @@ from unittest.mock import patch
 
 
 class TestAPIInterface(TestCase):
-    def setUp(self) -> None:
-        return super().setUp()
-
-    def tearDown(self) -> None:
-        return super().tearDown()
-
     @unittest.skip("Not tested yet.")
     def test_init(self):
         raise NotImplementedError
