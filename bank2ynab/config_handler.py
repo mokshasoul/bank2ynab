@@ -40,7 +40,7 @@ class ConfigHandler:
             self.user_config.add_section(bank)
             logging.info("Saving default account for %s...", bank)
         except configparser.DuplicateSectionError:
-            self.logger.warning("%s bank is already mapped to another account")
+            self.logger.warning("%s bank is already mapped to another account", bank)
 
         self.user_config.set(bank, "YNAB Account ID", f"{budget_id}||{account_id}")
         with open(self.user_conf_path, "w", encoding="utf-8") as config_file:
