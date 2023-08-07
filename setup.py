@@ -1,6 +1,6 @@
 import setuptools
 
-with open("README.md") as fh:
+with open("README.md", encoding="utf8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
@@ -21,5 +21,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3 :: Only",
     ],
-    python_requires=">=3.9",
+    python_requires=">=3.11",
 )
