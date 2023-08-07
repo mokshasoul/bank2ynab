@@ -27,9 +27,9 @@ def get_user_input(options: list, msg: str) -> str:
 
 
 def display_options(options: list):
-    logging.info("\n")
+    logger.info("\n")
     for index, option in enumerate(options):
-        logging.info("| %s | %s", index + 1, option[0])
+        logger.info("| %s | %s", index + 1, option[0])
 
 
 def get_int_input(min_val: int, max_val: int, msg: str) -> int:
