@@ -50,7 +50,7 @@ if __name__ == "__main__":
     try:
         config_handler = ConfigHandler()
     except FileNotFoundError:
-        logging.error("No configuration file found, process aborted.")
+        logger.error("No configuration file found, process aborted.")
     else:
         # generate list of bank objects to process
         bank_obj_list: List[BankHandler] = []

@@ -124,6 +124,7 @@ class APIInterface:
         :return: dictionary mapping budget id to parameters
         """
         budgets = self.api_read(budget_id="", keyword="budgets")
+
         return APIInterface.fix_id_based_dicts(budgets)
 
     @staticmethod

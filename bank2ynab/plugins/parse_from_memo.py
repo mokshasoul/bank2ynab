@@ -32,16 +32,12 @@ class ParseFromMemo(BankHandler):
         super().__init__(config_object)
 
         # Parsers from the Config, skipping blank rows
-        memo_parsers = list(
-            filter(len, self.config_dict.get("plugin_args", []))
-        )
+        memo_parsers = list(filter(len, self.config_dict.get("plugin_args", [])))
         if len(memo_parsers) <= 0:
             raise AttributeError(
                 "The plugin arguments option contained no regular expresions to use for parsing"
             )
-        self.parsers_to_try = list(
-            map(re.compile, memo_parsers)  # convert to regex
-        )
+        self.parsers_to_try = list(map(re.compile, memo_parsers))  # convert to regex
 
     def _preprocess_file(self, file_path: str, plugin_args: list) -> str:
         """
@@ -114,9 +110,7 @@ class ParseFromMemo(BankHandler):
                 if len(match["date"]):
                     date_col = self.config_dict["input_columns"].index("Date")
                     try:
-                        input_date = datetime.strptime(
-                            match["date"], "%d-%m-%Y"
-                        )
+                        input_date = datetime.strptime(match["date"], "%d-%m-%Y")
                         new_date = datetime.strftime(
                             input_date,
                             self.config_dict.get("date_format", "%Y-%m-%d"),
@@ -131,9 +125,7 @@ class ParseFromMemo(BankHandler):
             # Field that mutate the payee
             try:
                 if len(match["payee"]):
-                    payee_index = self.config_dict["input_columns"].index(
-                        "Payee"
-                    )
+                    payee_index = self.config_dict["input_columns"].index("Payee")
 
                     row[payee_index] = match["payee"]
             except IndexError:

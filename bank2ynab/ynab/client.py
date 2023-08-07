@@ -26,7 +26,7 @@ class YNABClient:
             # TODO: raise error
             pass
 
-        return res.json()['data']
+        return res.json()["data"]
 
     def get_budget(self, budget_id: str) -> dict:
         request_uri = f"{self.base_ur}/budget/{budget_id}"
@@ -35,7 +35,7 @@ class YNABClient:
             # TODO: raise error
             pass
 
-        return res.json()['data']
+        return res.json()["data"]
 
     def list_accounts(self, budget_id: str) -> dict:
         request_uri = f"{self.base_ur}/budget/{budget_id}/accounts"
@@ -44,7 +44,7 @@ class YNABClient:
             # TODO: raise error
             pass
 
-        return res.json()['data']
+        return res.json()["data"]
 
     def get_account(self, budget_id: str, account_id: str) -> dict:
         request_uri = f"{self.base_ur}/budget/{budget_id}/accounts/{account_id}"
@@ -53,4 +53,4 @@ class YNABClient:
             # TODO: raise error
             pass
 
-        return res.json()['data']
+        return res.json()["data"]

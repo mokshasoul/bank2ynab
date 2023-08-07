@@ -8,9 +8,7 @@ RESPONSE_CODES = {
     "401": "API access token missing, invalid, revoked, or expired.",
     "403.1": "The subscription for this account has lapsed.",
     "403.2": "The trial for this account has expired.",
-    "403.3": (
-        "The supplied access token has a scope which does not allow access."
-    ),
+    "403.3": ("The supplied access token has a scope which does not allow access."),
     "403.4": (
         "The request will exceed one or more data limits in place to prevent"
         " abuse. Generally means the API request was too large for"

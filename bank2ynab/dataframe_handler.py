@@ -127,9 +127,7 @@ class DataframeHandler:
         # merge duplicate input columns
         merge_duplicate_columns(self.df, input_columns)
         # add missing columns
-        add_missing_columns(
-            self.df, input_columns, output_columns + api_columns
-        )
+        add_missing_columns(self.df, input_columns, output_columns + api_columns)
         # fix date format
         self.df["Date"] = fix_date(self.df["Date"], date_format)
         self.df["Date"] = fill_empty_dates(self.df["Date"], date_dedupe)
@@ -258,9 +256,7 @@ def read_csv(
     )
 
 
-def merge_duplicate_columns(
-    df: pd.DataFrame, input_columns: List[str]
-) -> pd.DataFrame:
+def merge_duplicate_columns(df: pd.DataFrame, input_columns: List[str]) -> pd.DataFrame:
     """
     Merges columns specified more than once in the input_columns list.
     Note: converts values into strings before merging.
@@ -289,9 +285,7 @@ def merge_duplicate_columns(
                 # rename duplicate column
                 df.columns.values[key_col] = f"{key} {dupe_count}"
             # remove excess spaces
-            df[key] = (
-                df[key].str.replace("\\s{2,}", " ", regex=True).str.strip()
-            )
+            df[key] = df[key].str.replace("\\s{2,}", " ", regex=True).str.strip()
 
     logging.debug("\nAfter duplicate merge\n%s", df.head())
 
@@ -415,15 +409,11 @@ def clean_strings(string_series: pd.Series) -> pd.Series:
         "[^a-zA-Z0-9 ]", " ", regex=True
     )
     # remove newline characters
-    modified_string_series = modified_string_series.str.replace(
-        "\n", " ", regex=True
-    )
+    modified_string_series = modified_string_series.str.replace("\n", " ", regex=True)
     # strip leading and trailing whitespace
     modified_string_series = modified_string_series.str.strip()
     # replace multiple spacing with single
-    modified_string_series = modified_string_series.str.replace(
-        " +", " ", regex=True
-    )
+    modified_string_series = modified_string_series.str.replace(" +", " ", regex=True)
     return modified_string_series
 
 

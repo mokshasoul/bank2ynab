@@ -44,9 +44,7 @@ class PDF_Converter(BankHandler):
         return new_path
 
 
-def read_pdf_to_dataframe(
-    pdf_path: str, table_cols: List[str]
-) -> pd.DataFrame:
+def read_pdf_to_dataframe(pdf_path: str, table_cols: List[str]) -> pd.DataFrame:
     """
     Reads the main table from each page of a PDF and
     combines them into a single dataframe.
