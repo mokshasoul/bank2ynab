@@ -19,7 +19,7 @@ class BankHandler:
     for a given bank configuration.
     """
 
-    def __init__(self, config_dict: Dict[str, Any]) -> None:
+    def __init__(self, config_dict: dict[str, Any]) -> None:
         """
         Initialise object and load bank-specific configuration parameters.
 
@@ -30,7 +30,7 @@ class BankHandler:
         self.name = config_dict.get("bank_name", "DEFAULT")
         self.config_dict = config_dict
         self.files_processed = 0
-        self.transaction_list: List[Dict] = []
+        self.transaction_list: list[dict] = []
         self.logger = logging.getLogger("bank2ynab")
 
     def run(self) -> None:
@@ -43,7 +43,7 @@ class BankHandler:
             prefix=self.config_dict["fixed_prefix"],
         )
 
-        file_dfs: List = []
+        file_dfs: list = []
 
         for src_file in matching_files:
             self.logger.info("Parsing input file: %s (%s)", src_file, self.name)

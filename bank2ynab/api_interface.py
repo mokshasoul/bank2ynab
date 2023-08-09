@@ -14,7 +14,7 @@ from bank2ynab.ynab_api_response import YNABError
 class APIInterface:
     def __init__(self, api_token: str) -> None:
         # dict mapping {budget_id: {budget_params}}
-        self.budget_info: Dict[str, dict] = {}
+        self.budget_info: dict[str, dict] = {}
         self.logger = logging.getLogger("bank2ynab")
 
         self.logger.info("Attempting to connect to YNAB API...")
@@ -40,8 +40,8 @@ class APIInterface:
         budget_id: str,
         keyword: str,
         method: str,
-        data: Dict,
-    ) -> Dict:
+        data: dict,
+    ) -> dict:
         base_url = "https://api.youneedabudget.com/v1/budgets/"
         params = {"access_token": self.api_token}
 
@@ -105,7 +105,7 @@ class APIInterface:
         except YNABError as err:
             self.logger.error("YNAB API Error: %s", err)
 
-    def get_budget_accounts(self, *, budget_id: str) -> Dict[str, Dict]:
+    def get_budget_accounts(self, *, budget_id: str) -> dict[str, dict]:
         """
         Returns dictionary matching account id to list of account parameters.
 
@@ -116,7 +116,7 @@ class APIInterface:
         accounts = self.api_read(budget_id=budget_id, keyword="accounts")
         return APIInterface.fix_id_based_dicts(accounts)
 
-    def get_budgets(self) -> Dict[str, Dict]:
+    def get_budgets(self) -> dict[str, dict]:
         """
         Returns dictionary matching budget id to list of budget parameters.
 
@@ -128,14 +128,14 @@ class APIInterface:
         return APIInterface.fix_id_based_dicts(budgets)
 
     @staticmethod
-    def fix_id_based_dicts(input_data: Dict) -> Dict[str, Dict]:
+    def fix_id_based_dicts(input_data: dict) -> dict[str, dict]:
         """
         Combines response data JSON into a dictionary mapping ID to response data.
 
         :param input_data: JSON-style dictionary
         :return: dictionary mapping "id" to response data
         """
-        output_dict: Dict[str, Dict] = {}
+        output_dict: dict[str, dict] = {}
         for sub_dict in input_data:
             output_dict.setdefault(sub_dict["id"], sub_dict)
 
