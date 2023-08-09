@@ -48,7 +48,7 @@ class ConfigHandler:
 
         self.config.update(self.user_config)
 
-    def fix_conf_params(self, section: str) -> Dict[str, Any]:
+    def fix_conf_params(self, section: str) -> dict[str, Any]:
         """
         from a ConfigParser object, return a dictionary of all parameters
         for a given section in the expected format.
@@ -150,7 +150,7 @@ class ConfigHandler:
 
     def get_config_line_lst(
         self, section_name: str, param: str, splitter: str
-    ) -> List[Any]:
+    ) -> list[Any]:
         """
         Returns a list value from a given section in the config object.
 

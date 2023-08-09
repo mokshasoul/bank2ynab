@@ -37,10 +37,10 @@ class DataframeHandler:
         header_rows: int,
         footer_rows: int,
         encod: str,
-        input_columns: List[str],
-        output_columns: List[str],
-        api_columns: List[str],
-        cd_flags: List[str],
+        input_columns: list[str],
+        output_columns: list[str],
+        api_columns: list[str],
+        cd_flags: list[str],
         date_format: str,
         date_dedupe: bool,
         fill_memo: bool,
@@ -98,10 +98,10 @@ class DataframeHandler:
     def parse_data(
         self,
         *,
-        input_columns: List[str],
-        output_columns: List[str],
-        api_columns: List[str],
-        cd_flags: List[str],
+        input_columns: list[str],
+        output_columns: list[str],
+        api_columns: list[str],
+        cd_flags: list[str],
         date_format: str,
         date_dedupe: bool,
         fill_memo: bool,
@@ -256,7 +256,7 @@ def read_csv(
     )
 
 
-def merge_duplicate_columns(df: pd.DataFrame, input_columns: List[str]) -> pd.DataFrame:
+def merge_duplicate_columns(df: pd.DataFrame, input_columns: list[str]) -> pd.DataFrame:
     """
     Merges columns specified more than once in the input_columns list.
     Note: converts values into strings before merging.
@@ -267,7 +267,7 @@ def merge_duplicate_columns(df: pd.DataFrame, input_columns: List[str]) -> pd.Da
     """
 
     # create dictionary mapping column names to indices of duplicates
-    cols_to_merge: Dict[str, List[int]] = {}
+    cols_to_merge: dict[str, list[int]] = {}
     for index, col in enumerate(input_columns):
         if col not in cols_to_merge:
             cols_to_merge[col] = []
@@ -293,7 +293,7 @@ def merge_duplicate_columns(df: pd.DataFrame, input_columns: List[str]) -> pd.Da
 
 
 def add_missing_columns(
-    df: pd.DataFrame, input_cols: List[str], output_cols: List[str]
+    df: pd.DataFrame, input_cols: list[str], output_cols: list[str]
 ) -> pd.DataFrame:
     """
     Adds any missing required columns to the Dataframe.
@@ -313,7 +313,7 @@ def add_missing_columns(
     return df
 
 
-def cd_flag_process(df: pd.DataFrame, cd_flags: List[str]) -> pd.DataFrame:
+def cd_flag_process(df: pd.DataFrame, cd_flags: list[str]) -> pd.DataFrame:
     """
     Fix columns where inflow/outflow is indicated by a flag
     in a separate column.
@@ -460,7 +460,7 @@ def fill_empty_dates(date_series: pd.Series, fill_dates: bool) -> pd.Series:
     return date_series
 
 
-def combine_dfs(df_list: List[pd.DataFrame]) -> pd.DataFrame:
+def combine_dfs(df_list: list[pd.DataFrame]) -> pd.DataFrame:
     """
     Concatenate a list of provided dataframes.
 
