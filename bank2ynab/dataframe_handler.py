@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Dict, List
 
 import pandas as pd
 

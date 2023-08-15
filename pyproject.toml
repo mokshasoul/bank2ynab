@@ -23,6 +23,7 @@ isort = "^5.12.0"
 pyupgrade = ">=2.31.1"
 bandit = "^1.7.5"
 pyproject-flake8 = "^6.0.0.post1"
+pydocstringformatter = "^0.7.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
