@@ -24,6 +24,8 @@ pyupgrade = ">=2.31.1"
 bandit = "^1.7.5"
 pyproject-flake8 = "^6.0.0.post1"
 pydocstringformatter = "^0.7.3"
+types-chardet = "^5.0.4.6"
+pandas-stubs = "^2.0.3.230814"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
