@@ -16,7 +16,7 @@ class DataframeHandler:
     def __init__(self) -> None:
         self.df = pd.DataFrame()
         self.api_transaction_df = pd.DataFrame()
-        self.empty = None
+        self.empty = True
         self.output_df = pd.DataFrame()
 
     def output_csv(self, path: str) -> None:
@@ -120,7 +120,7 @@ class DataframeHandler:
         :return: modified dataframe matching provided configuration values
         """
         # set column names based on input column list
-        self.df.columns = input_columns
+        self.df.columns = pd.Index(input_columns)
         # debug to see what our df is like before transformation
         logging.debug("\nInitial DF\n%s", self.df.head())
         # merge duplicate input columns
