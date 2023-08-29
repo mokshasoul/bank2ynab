@@ -99,7 +99,8 @@ class YNAB_API:
                 )
             else:
                 logging.info(
-                    "Saving default YNAB account is disabled for %s - account match not saved.",
+                    "Saving default YNAB account is disabled for %s "
+                    "- account match not saved.",
                     bank_name,
                 )
 
