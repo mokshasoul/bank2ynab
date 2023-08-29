@@ -7,7 +7,7 @@ import logging
 import os
 import traceback
 from pathlib import Path
-from typing import Any, List, Dict
+from typing import Any
 
 from bank2ynab import dataframe_handler, transactionfile_reader
 from bank2ynab.dataframe_handler import DataframeHandler
