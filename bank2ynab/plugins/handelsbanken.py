@@ -50,15 +50,10 @@ class Handelsbanken(BankHandler):
 
         # overwrite our source file
         with open(file_path, encoding="utf-8", mode="wb") as output_file:
-            writer = csv.DictWriter(
-                output_file,
-                fieldnames=output_rows[0],
-                quoting=csv.QUOTE_ALL,
-                delimiter=";",
-                lineterminator="\n",
+            writer = csv.writer(
+                output_file, delimiter=";", quoting=csv.QUOTE_ALL, lineterminator="\n"
             )
-            writer.writeheader()
-            writer.writerows(output_rows[1:])
+            writer.writerows(output_rows)
 
         return file_path
 
