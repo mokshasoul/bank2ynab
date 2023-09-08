@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 import requests
 
@@ -65,7 +66,7 @@ class APIInterface:
         response_data = response.json()["data"]
         return response_data
 
-    def api_read(self, *, budget_id: str, keyword: str) -> dict:
+    def api_read(self, *, budget_id: str, keyword: str) -> Any:
         return_data = {}
         try:
             return_data = self.access_api(
@@ -77,7 +78,7 @@ class APIInterface:
         except YNABError as err:
             self.logger.error("YNAB API Error: %s", err)
 
-        return return_data[keyword]
+        return return_data.get(keyword, {})
 
     def post_transactions(self, *, budget_id: str, data: dict) -> None:
         """

@@ -27,6 +27,8 @@ pydocstringformatter = "^0.7.3"
 types-chardet = "^5.0.4.6"
 pandas-stubs = "^2.0.3.230814"
 pylint = "^2.17.5"
+ruff = "^0.0.286"
+types-setuptools = "^68.1.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -643,4 +645,10 @@ mypy_path = "$MYPY_CONFIG_FILE_DIR/bank2ynab:$MYPY_CONFIG_FILE_DIR/typings"
 python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
-exclude = []
+exclude = [
+    "bank2ynab/plugins/*"
+]
+
+[[tool.mypy.overrides]]
+module = "bank2ynab.plugins.*"
+ignore_errors = true

@@ -5,21 +5,7 @@ import pandas as pd
 import pandas.testing
 from pandas._libs.missing import NA
 
-from bank2ynab.dataframe_handler import (
-    add_missing_columns,
-    auto_memo,
-    auto_payee,
-    cd_flag_process,
-    clean_monetary_values,
-    clean_strings,
-    combine_dfs,
-    fill_api_columns,
-    fill_empty_dates,
-    fix_amount,
-    fix_date,
-    merge_duplicate_columns,
-    remove_invalid_rows,
-)
+from bank2ynab.dataframe_handler import DataframeHandler
 
 
 class TestDataframeHandler(TestCase):
@@ -108,9 +94,7 @@ class TestDataframeHandler(TestCase):
                 "Test different amount of missing columns.", dataset=dataset
             ):
                 test_df = pd.DataFrame(dataset)
-                test_df = add_missing_columns(
-                    test_df, list(test_df), desired_cols
-                )
+                test_df = add_missing_columns(test_df, list(test_df), desired_cols)
                 # check if column names contain all desired values
                 self.assertCountEqual(desired_cols, list(test_df))
 
@@ -145,9 +129,7 @@ class TestDataframeHandler(TestCase):
             ):
                 test_df = pd.DataFrame(dataset["data"])
                 test_df = cd_flag_process(test_df, dataset["cd_flags"])
-                self.assertEqual(
-                    dataset["target_inflow"], test_df["Inflow"].iloc[0]
-                )
+                self.assertEqual(dataset["target_inflow"], test_df["Inflow"].iloc[0])
 
     def test_fix_amount(self):
         """
@@ -335,9 +317,7 @@ class TestDataframeHandler(TestCase):
             ["New Line\nIn The String", "New Line In The String"],
         ]
         for test in test_strings:
-            with self.subTest(
-                "Test different types of string input.", test=test
-            ):
+            with self.subTest("Test different types of string input.", test=test):
                 test_series = pd.Series(data={1: test[0]})
                 desired_output = pd.Series(data={1: test[1]})
                 test_output = clean_strings(test_series)

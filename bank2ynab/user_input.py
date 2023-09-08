@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 logger = logging.getLogger("bank2ynab")
 
 
-def get_user_input(options: list, msg: str) -> str:
+def get_user_input(options: list, msg: str) -> Any:
     """
     Used to select from a list of options.
     If only one item in list, selects that by default.

@@ -26,7 +26,7 @@ def build_bank(bank_config: Dict[str, Any]) -> BankHandler:
                 "does not contain the required build_bank(config) method."
             )
             raise ImportError(err_msg)
-        bank = module.build_bank(bank_config)
+        bank: BankHandler = module.build_bank(bank_config)
         return bank
 
     return BankHandler(config_dict=bank_config)

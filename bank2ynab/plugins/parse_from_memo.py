@@ -14,6 +14,7 @@ Plugin that uses information from the memo field to fill in other fields
 #   Plugin = parse_from_memo
 
 import logging
+from pathlib import Path
 import re
 from datetime import datetime
 
@@ -39,7 +40,7 @@ class ParseFromMemo(BankHandler):
             )
         self.parsers_to_try = list(map(re.compile, memo_parsers))  # convert to regex
 
-    def _preprocess_file(self, file_path: str, plugin_args: list) -> str:
+    def _preprocess_file(self, file_path: str, **kwargs) -> Path:
         """
         Override the memo, date and payee columns with information read from the memo field
         """
@@ -85,7 +86,7 @@ class ParseFromMemo(BankHandler):
             if not match:
                 continue
 
-            logging.debug(f"Matches for '{original_memo}': ")
+            logging.debug("Matches for '%s': ", original_memo)
             logging.debug(match.groups())
 
             # Fields that mutate the memo field

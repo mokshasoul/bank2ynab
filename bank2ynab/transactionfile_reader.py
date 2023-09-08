@@ -113,12 +113,10 @@ def find_directory(filepath: str) -> Path:
         # Windows
         winreg = __import__("winreg")
 
-        shell_path = (
-            "SOFTWARE\\Microsoft\\Windows\\CurrentVersion" "\\Explorer\\Shell Folders"
-        )
+        shell_path = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"
         dl_key = "{374DE290-123F-4565-9164-39C4925E467B}"
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER, shell_path) as key:
-            input_dir = winreg.QueryValueEx(key, dl_key)[0]
+            input_dir = Path(winreg.QueryValueEx(key, dl_key)[0]).resolve()
     else:
         # Linux, OSX
         input_dir = Path.home() / "Downloads"

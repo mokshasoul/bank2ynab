@@ -1,6 +1,6 @@
 # Plugin for handling OCBC Bank [SG] files
 
-from bank_handler import BankHandler
+from bank2ynab.bank_handler import BankHandler
 
 
 class OCBC_Bank_SG(BankHandler):
@@ -13,7 +13,7 @@ class OCBC_Bank_SG(BankHandler):
         super().__init__(config_dict)
         self.name = "OCBC_Bank_SG"
 
-    def _preprocess_file(self, file_path, plugin_args) -> str:
+    def _preprocess_file(self, file_path: str, **kwargs) -> str:
         """
         For every row that doesn't have a valid date field
         strip out separators and append to preceding row.
@@ -25,10 +25,10 @@ class OCBC_Bank_SG(BankHandler):
         footer_rows = int(self.config_dict["footer_rows"])
 
         # get total number of rows in transaction file using a generator
-        with open(file_path) as row_counter:
+        with open(file_path, encoding="utf-8") as row_counter:
             row_count = sum(1 for _ in row_counter)
 
-        with open(file_path) as input_file:
+        with open(file_path, encoding="utf-8") as input_file:
             output_rows = []
             for rownum, row in enumerate(input_file):
                 # append headers and footers without modification
