@@ -18,11 +18,10 @@ classifiers = [
 	"Programming Language :: Python :: 3.10",
 	"Programming Language :: Python :: 3.11",
 ]
-dependencies = [
-	"requests",
-	"chardet",
-	"pandas",
-	"pdfplumber",
+dependencies = ["requests", "chardet", "pandas", "pdfplumber"]
+maintainers = [
+	{ name = "Charis-Nicolas Georgiou", email = "charis@elegantsolutions.eu" },
+	{ name = "Torben G-B", email = "torben@g-b.dk" },
 ]
 
 [project.optional-dependencies]
@@ -55,9 +54,7 @@ Homepage = "https://github.com/bank2ynab/bank2ynab"
 path = "bank2ynab/__init__.py"
 
 [tool.hatch.build.targets.sdist]
-include = [
-	"/bank2ynab",
-]
+include = ["/bank2ynab"]
 
 
 [tool.flake8]
@@ -671,9 +668,7 @@ mypy_path = "$MYPY_CONFIG_FILE_DIR/bank2ynab:$MYPY_CONFIG_FILE_DIR/typings"
 python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
-exclude = [
-	"bank2ynab/plugins/*"
-]
+exclude = ["bank2ynab/plugins/*"]
 
 [[tool.mypy.overrides]]
 module = "bank2ynab.plugins.*"
