@@ -107,10 +107,13 @@ Here is a list of the banks and their formats that we already support. Note that
 1. AT Raiffeisen Bank 2018
 1. AT Raiffeisen Bank RCM
 1. AT Raiffeisen Bank 2019 checking
+1. AT Raiffeisen Bank 2021 checking
 1. AT Raiffeisen VISA
 1. AU ANZ
 1. AU ING
 1. AU National Australia Bank
+1. BE BNP Paribas Fortis old
+1. BE BNP Paribas Fortis Export
 1. BE KBC checking
 1. BE KBC credit
 1. BE Keytrade Bank
@@ -118,11 +121,13 @@ Here is a list of the banks and their formats that we already support. Note that
 1. BR Inter, checking
 1. CA TD Canada Trust, checking+Visa
 1. CH UBS Checking account
+1. CH UBS Checking account - Alternative 1
 1. CH UBS Credit card
+1. CH SwissCard
 1. CH ZKB Erweiterte Suche
 1. CH ZKB Finanzassistent-Chronik
 1. CO Bancolombia
-1. Crypto.com Card
+1. Crypto.com
 1. CZ AirBank checking and savings
 1. CZ Ceska Sporitelna
 1. CZ Raiffeisen bank
@@ -140,7 +145,6 @@ Here is a list of the banks and their formats that we already support. Note that
 1. DE Ostseesparkasse Rostock checking
 1. DE Ostseesparkasse Rostock credit card
 1. DE Sparkasse Rhein-Neckar-Nord
-1. DE Landesbank Berlin Amazon Kreditkarten-Banking
 1. DE Sparkasse Südholstein
 1. DK Bankernes EDB Central
 1. DK Danske Bank
@@ -173,7 +177,9 @@ Here is a list of the banks and their formats that we already support. Note that
 1. NO DNB
 1. NO Sparebank 1 VISA
 1. Personal Capital
+1. PL Alior Bank
 1. PL mBank
+1. PL PKO BP
 1. Revolut
 1. SE Handelsbanken
 1. SE Länsförsäkringar checking
@@ -194,7 +200,8 @@ Here is a list of the banks and their formats that we already support. Note that
 1. UK Barclaycard credit card
 1. UK Barclaycard Business Credit Card
 1. UK first direct checking
-1. UK John Lewis Partnership Card
+1. UK John Lewis Partnership Card (Pre-2022 Format)
+1. UK John Lewis Partnership Card (NewDay Format)
 1. US Bank of America
 1. US Bank of America Credit Card
 1. US BB&T

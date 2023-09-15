@@ -315,6 +315,10 @@ class TestDataframeHandler(TestCase):
             [r"Non alphanumeric \ ! @", "Non Alphanumeric"],
             ["RanDom CAPITAL letters", "Random Capital Letters"],
             ["New Line\nIn The String", "New Line In The String"],
+            [
+                "Ðö nøt rēmove ácçeñtéd chäråcterß",
+                "Ðö Nøt Rēmove Ácçeñtéd Chäråcterß",
+            ],
         ]
         for test in test_strings:
             with self.subTest("Test different types of string input.", test=test):
