@@ -1,38 +1,64 @@
-[tool.poetry]
-name = "bank2ynab"
-version = "0.1.0"
-description = ""
-authors = []
-license = "MIT"
-
-[tool.poetry.dependencies]
-python = "^3.8.12"
-requests = "^2.26.0"
-chardet = "^4.0.0"
-pandas = "^1.3.4"
-pdfplumber = "^0.6.0"
-
-
-[tool.poetry.group.dev.dependencies]
-black = "^23.3.0"
-types-requests = "^2.30.0.0"
-mypy = "^1.3.0"
-flake8 = "^6.0.0"
-pydocstyle = ">=6.1.1"
-isort = "^5.12.0"
-pyupgrade = ">=2.31.1"
-bandit = "^1.7.5"
-pyproject-flake8 = "^6.0.0.post1"
-pydocstringformatter = "^0.7.3"
-types-chardet = "^5.0.4.6"
-pandas-stubs = "^2.0.3.230814"
-pylint = "^2.17.5"
-ruff = "^0.0.286"
-types-setuptools = "^68.1.0.0"
-
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bank2ynab"
+dynamic = ["version"]
+description = "Easily convert and import your bank's statements into YNAB."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+classifiers = [
+	"License :: OSI Approved :: MIT License",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python",
+	"Programming Language :: Python :: 3 :: Only",
+	"Programming Language :: Python :: 3.9",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+]
+dependencies = [
+	"requests",
+	"chardet",
+	"pandas",
+	"pdfplumber",
+]
+
+[project.optional-dependencies]
+dev = [
+	"black",
+	"types-requests",
+	"mypy",
+	"flake8",
+	"pydocstyle",
+	"isort",
+	"pyupgrade",
+	"bandit",
+	"pyproject-flake8",
+	"pydocstringformatter",
+	"types-chardet",
+	"pandas-stubs",
+	"pylint",
+	"ruff",
+	"types-setuptools",
+]
+
+[[project.authors]]
+name = "https://github.com/bank2ynab/bank2ynab/graphs/contributors"
+email = "torben@g-b.dk"
+
+[project.urls]
+Homepage = "https://github.com/bank2ynab/bank2ynab"
+
+[tool.hatch.version]
+path = "bank2ynab/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+	"/bank2ynab",
+]
+
 
 [tool.flake8]
 max-line-length = 88
@@ -274,22 +300,22 @@ variable-naming-style = "snake_case"
 
 # List of method names used to declare (i.e. assign) instance attributes.
 defining-attr-methods = [
-    "__init__",
-    "__new__",
-    "setUp",
-    "asyncSetUp",
-    "__post_init__",
+	"__init__",
+	"__new__",
+	"setUp",
+	"asyncSetUp",
+	"__post_init__",
 ]
 
 # List of member names, which should be excluded from the protected access
 # warning.
 exclude-protected = [
-    "_asdict",
-    "_fields",
-    "_replace",
-    "_source",
-    "_make",
-    "os._exit",
+	"_asdict",
+	"_fields",
+	"_replace",
+	"_source",
+	"_make",
+	"os._exit",
 ]
 
 # List of valid names for the first argument in a class method.
@@ -415,11 +441,11 @@ logging-modules = ["logging"]
 # Only show warnings with the listed confidence levels. Leave empty to show all.
 # Valid levels: HIGH, CONTROL_FLOW, INFERENCE, INFERENCE_FAILURE, UNDEFINED.
 confidence = [
-    "HIGH",
-    "CONTROL_FLOW",
-    "INFERENCE",
-    "INFERENCE_FAILURE",
-    "UNDEFINED",
+	"HIGH",
+	"CONTROL_FLOW",
+	"INFERENCE",
+	"INFERENCE_FAILURE",
+	"UNDEFINED",
 ]
 
 # Disable the message, report, category or checker with the given id(s). You can
@@ -432,18 +458,18 @@ confidence = [
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable = [
-    "raw-checker-failed",
-    "bad-inline-option",
-    "locally-disabled",
-    "file-ignored",
-    "suppressed-message",
-    "useless-suppression",
-    "deprecated-pragma",
-    "use-symbolic-message-instead",
-    "invalid-name",
-    "missing-module-docstring",
-    "missing-class-docstring",
-    "missing-function-docstring",
+	"raw-checker-failed",
+	"bad-inline-option",
+	"locally-disabled",
+	"file-ignored",
+	"suppressed-message",
+	"useless-suppression",
+	"deprecated-pragma",
+	"use-symbolic-message-instead",
+	"invalid-name",
+	"missing-module-docstring",
+	"missing-class-docstring",
+	"missing-function-docstring",
 ]
 
 # Enable the message, report, category or checker with the given id(s). You can
@@ -456,14 +482,14 @@ enable = ["c-extension-no-member"]
 # List of qualified names (i.e., library.method) which require a timeout
 # parameter e.g. 'requests.api.get,requests.api.post'
 timeout-methods = [
-    "requests.api.delete",
-    "requests.api.get",
-    "requests.api.head",
-    "requests.api.options",
-    "requests.api.patch",
-    "requests.api.post",
-    "requests.api.put",
-    "requests.api.request",
+	"requests.api.delete",
+	"requests.api.get",
+	"requests.api.head",
+	"requests.api.options",
+	"requests.api.patch",
+	"requests.api.post",
+	"requests.api.put",
+	"requests.api.request",
 ]
 
 [tool.pylint.miscellaneous]
@@ -570,20 +596,20 @@ ignore-on-opaque-inference = true
 
 # List of symbolic message names to ignore for Mixin members.
 ignored-checks-for-mixins = [
-    "no-member",
-    "not-async-context-manager",
-    "not-context-manager",
-    "attribute-defined-outside-init",
+	"no-member",
+	"not-async-context-manager",
+	"not-context-manager",
+	"attribute-defined-outside-init",
 ]
 
 # List of class names for which member attributes should not be checked (useful
 # for classes with dynamically set attributes). This supports the use of
 # qualified names.
 ignored-classes = [
-    "optparse.Values",
-    "thread._local",
-    "_thread._local",
-    "argparse.Namespace",
+	"optparse.Values",
+	"thread._local",
+	"_thread._local",
+	"argparse.Namespace",
 ]
 
 # Show a hint with possible names when a member name was not found. The aspect of
@@ -632,11 +658,11 @@ ignored-argument-names = "_.*|^ignored_|^unused_"
 # List of qualified module names which can have objects that can redefine
 # builtins.
 redefining-builtins-modules = [
-    "six.moves",
-    "past.builtins",
-    "future.builtins",
-    "builtins",
-    "io",
+	"six.moves",
+	"past.builtins",
+	"future.builtins",
+	"builtins",
+	"io",
 ]
 
 
@@ -646,7 +672,7 @@ python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 exclude = [
-    "bank2ynab/plugins/*"
+	"bank2ynab/plugins/*"
 ]
 
 [[tool.mypy.overrides]]
