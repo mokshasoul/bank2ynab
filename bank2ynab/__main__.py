@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     if args.verbose:
         logger.setLevel(logging.DEBUG)
-        logger.debug("%s DEBUG LOGGING ACTIVE %s", "-" * 8, "-" * 8)
+        logger.debug("%s\nDEBUG LOGGING ACTIVE\n%s", "-" * 8, "-" * 8)
 
     try:
         config_handler = ConfigHandler()
@@ -63,6 +63,7 @@ if __name__ == "__main__":
         # initialize variables for summary:
         files_processed = 0
         bank_transaction_dict: Dict[str, list] = {}
+
         # process account for each config entry
         for bank_object in bank_obj_list:
             bank_object.run()
