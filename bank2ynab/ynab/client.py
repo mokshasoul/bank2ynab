@@ -22,36 +22,27 @@ class YNABClient:
     def list_budgets(self) -> Any:
         request_uri = f"{self.base_uri}/budget"
         res = self.client.get(url=request_uri)
-
-        if res.status_code >= 300:
-            # TODO: raise error
-            pass
+        res.raise_for_status()
 
         return res.json().get("data", {})
 
     def get_budget(self, budget_id: str) -> Any:
         request_uri = f"{self.base_uri}/budget/{budget_id}"
         res = self.client.get(url=request_uri)
-        if res.status_code >= 300:
-            # TODO: raise error
-            pass
+        res.raise_for_status()
 
         return res.json().get("data", {})
 
     def list_accounts(self, budget_id: str) -> Any:
         request_uri = f"{self.base_uri}/budget/{budget_id}/accounts"
         res = self.client.get(url=request_uri)
-        if res.status_code >= 300:
-            # TODO: raise error
-            pass
+        res.raise_for_status()
 
         return res.json().get("data", {})
 
     def get_account(self, budget_id: str, account_id: str) -> Any:
         request_uri = f"{self.base_uri}/budget/{budget_id}/accounts/{account_id}"
         res = self.client.get(url=request_uri)
-        if res.status_code >= 300:
-            # TODO: raise error
-            pass
+        res.raise_for_status()
 
         return res.json().get("data", {})
