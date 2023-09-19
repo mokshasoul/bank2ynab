@@ -1,0 +1,15 @@
+black
+types-requests
+mypy
+flake8
+pydocstyle
+isort
+pyupgrade
+bandit
+pyproject-flake8
+pydocstringformatter
+types-chardet
+pandas-stubs
+pylint
+ruff
+types-setuptools
