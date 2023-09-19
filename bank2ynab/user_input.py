@@ -44,27 +44,24 @@ def get_int_input(min_val: int, max_val: int, msg: str) -> int:
     """
     while True:
         try:
-            user_input = int(input(f"{msg} (range {min_val} - {max_val}): "))
+            tmp_input = input(f"{msg} (range {min_val} - {max_val}): ")
+            user_input = int(tmp_input)
             if user_input not in range(min_val, max_val + 1):
                 raise ValueError
             break
         except ValueError:
-            logger.error(
+            logger.exception(
                 """
-            %s is not a number within the accepted range %s - %s
-            please try again
-            """,
+                %s is not a number within the accepted range %s - %s
+                please try again
+                """,
                 user_input,
                 min_val,
                 max_val,
             )
-            print(
-                "The value entered is not an integer in the acceptable"
-                " range, please enter a different value!"
-            )
             continue
         except TypeError:
-            logger.error("%s was not a number, please try again", user_input)
+            logger.exception("%s was not a number, please try again", user_input)
             continue
 
     return user_input
