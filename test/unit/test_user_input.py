@@ -23,13 +23,9 @@ class TestUserInput(TestCase):
         test_inputs = [1, 2, 3]
         mock_input.side_effect = test_inputs
         for test_input in test_inputs:
-            with self.subTest(
-                "Test different integer inputs.", test_input=test_input
-            ):
+            with self.subTest("Test different integer inputs.", test_input=test_input):
                 return_string = get_user_input(test_options, test_message)
-                self.assertEqual(
-                    test_options[test_input - 1][1], return_string
-                )
+                self.assertEqual(test_options[test_input - 1][1], return_string)
 
     @patch("builtins.print")
     def test_option_display(self, mock_print):

@@ -7,7 +7,6 @@ from unittest import TestCase
 # from bank2ynab.config_handler import ConfigHandler
 
 
-
 class TestBankHandler(TestCase):
     @unittest.skip("Not tested yet.")
     def test_preprocess_file(self):
