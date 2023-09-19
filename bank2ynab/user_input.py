@@ -43,8 +43,11 @@ def get_int_input(min_val: int, max_val: int, msg: str) -> int:
     :return user_input: sanitised integer input in acceptable range
     """
     while True:
+        tmp_input = input(f"{msg} (range {min_val} - {max_val}): ")
         try:
-            tmp_input = input(f"{msg} (range {min_val} - {max_val}): ")
+            if not str(tmp_input).isnumeric():
+                raise TypeError
+
             user_input = int(tmp_input)
             if user_input not in range(min_val, max_val + 1):
                 raise ValueError
@@ -61,7 +64,7 @@ def get_int_input(min_val: int, max_val: int, msg: str) -> int:
             )
             continue
         except TypeError:
-            logger.exception("%s was not a number, please try again", user_input)
+            logger.exception("%s was not a number, please try again", tmp_input)
             continue
 
     return user_input
