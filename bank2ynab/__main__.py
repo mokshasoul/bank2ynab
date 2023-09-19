@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     try:
         config_handler = ConfigHandler(
-            project_path=Path(__file__).resolve().parent.parent
+            project_dir=Path(__file__).resolve().parent.parent
         )
     except FileNotFoundError:
         logger.error("No configuration file found, process aborted.")
