@@ -4,6 +4,7 @@
 import importlib
 import argparse
 import logging
+from pathlib import Path
 from typing import Any, Dict, List
 
 from bank2ynab.bank_handler import BankHandler
@@ -48,7 +49,9 @@ if __name__ == "__main__":
         logger.debug("%s\nDEBUG LOGGING ACTIVE\n%s", "-" * 8, "-" * 8)
 
     try:
-        config_handler = ConfigHandler()
+        config_handler = ConfigHandler(
+            project_path=Path(__file__).resolve().parent.parent
+        )
     except FileNotFoundError:
         logger.error("No configuration file found, process aborted.")
     else:

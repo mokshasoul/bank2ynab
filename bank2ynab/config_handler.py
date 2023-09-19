@@ -9,7 +9,7 @@ from typing import Any
 class ConfigHandler:
     logger = logging.getLogger("bank2ynab")
 
-    def __init__(self) -> None:
+    def __init__(self, project_dir: Path) -> None:
         """
         This class instantiates a config handler
         tha reads bank2ynab.conf and if specified the
@@ -17,8 +17,6 @@ class ConfigHandler:
 
         It handles reading, updating and cleaning the configuration
         """
-
-        project_dir = Path(__file__).resolve().parent.parent
         self.bank_conf_path = project_dir / "bank2ynab.conf"
         self.user_conf_path = project_dir / "user_configuration.conf"
 
@@ -26,6 +24,8 @@ class ConfigHandler:
         if self.bank_conf_path.exists():
             with open(self.bank_conf_path, encoding="utf-8") as f:
                 self.config.read_file(f)
+        else:
+            raise FileNotFoundError("No configuration file found, process aborted.")
 
         self.user_config = configparser.ConfigParser(interpolation=None)
         if self.user_conf_path.exists():
