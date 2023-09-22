@@ -5,42 +5,36 @@ import pandas as pd
 import pandas.testing
 from pandas._libs.missing import NA
 
-from bank2ynab.dataframe_handler import DataframeHandler
+from bank2ynab.dataframe_handler import (
+    merge_duplicate_columns,
+    add_missing_columns,
+    fix_amount,
+    cd_flag_process,
+    clean_monetary_values,
+    combine_dfs,
+    clean_strings,
+    fill_empty_dates,
+    fix_date,
+)
 
 
 class TestDataframeHandler(TestCase):
-    def setUp(self) -> None:
-        return super().setUp()
-
-    def tearDown(self) -> None:
-        return super().tearDown()
-
     @unittest.skip("Not tested yet.")
     def test_read_csv(self):
         """Test reading of CSV file into dataframe."""
-        """
-        file_path: str,
-        delim: str,
-        header_rows: int,
-        footer_rows: int,
-        encod: str,
-        """
         raise NotImplementedError
 
     @unittest.skip("Not tested yet.")
     def test_parse_data(self):
         """Test full parsing workflow."""
-        """
-        test_dataframe = DataframeHandler
-        self.input_columns = input_columns
-        self.output_columns = output_columns
-        self.api_columns = api_columns
-        self.cd_flags = cd_flags
-        self.date_format = date_format
-        self.fill_memo = fill_memo
-        self.currency_fix = currency_fix
-        """
-
+        # test_dataframe = DataframeHandler
+        # self.input_columns = input_columns
+        # self.output_columns = output_columns
+        # self.api_columns = api_columns
+        # self.cd_flags = cd_flags
+        # self.date_format = date_format
+        # self.fill_memo = fill_memo
+        # self.currency_fix = currency_fix
         raise NotImplementedError
 
     def test_merge_duplicate_columns(self):
@@ -149,13 +143,13 @@ class TestDataframeHandler(TestCase):
         desired_output["Inflow"] = desired_output["Inflow"].astype(float)
         desired_output["Outflow"] = desired_output["Outflow"].astype(float)
         desired_output["amount"] = desired_output["amount"].astype(int)
-        for column in desired_output.keys():
+        for column, des_out in desired_output.items():
             with self.subTest(
                 "Test each column's negative inflow/outflow processing.",
                 column=column,
             ):
                 pandas.testing.assert_series_equal(
-                    desired_output[column],
+                    des_out,
                     test_df[column],
                 )
 
@@ -224,7 +218,7 @@ class TestDataframeHandler(TestCase):
     def test_remove_invalid_rows(self):
         initial_df = pd.DataFrame(
             {
-                "Inflow": [10, 0, 30, 0, 66, NA, NA, 0],
+                "Inflow": [10, 0, 30, 0, 66, NAType, NAType, 0],
                 "Outflow": [0, 20, 40, 100, 0, NA, 77, 0],
                 "amount": [10, -20, -10, -100, 66, 0, -77, 0],
                 "Payee": ["a", "b", "c", "d", "e", "f", "g", "h"],
