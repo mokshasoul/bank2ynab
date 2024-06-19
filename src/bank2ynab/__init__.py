@@ -1,1 +1,2 @@
-__version__ = "0.0.1"
+"""Bank2YNAB package."""
+__version__ = "1.2.0"

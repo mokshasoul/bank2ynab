@@ -35,6 +35,22 @@ class BankHandler:
         self.logger = logging.getLogger("bank2ynab")
 
     def run(self) -> None:
+        """
+        Runs the bank handler to process input files and generate transaction data.
+
+        This method performs the following steps:
+        1. Retrieves matching input files based on the configuration settings.
+        2. Preprocesses each input file if required.
+        3. Parses the input file and creates a base dataframe.
+        4. Writes the output file.
+        5. Saves the API transaction data for each bank to a list.
+        6. Deletes the original input file if specified in the configuration.
+
+        Note: This method updates the `transaction_list` attribute of the bank handler.
+
+        Returns:
+            None
+        """
         matching_files = transactionfile_reader.get_files(
             name=self.config_dict["bank_name"],
             file_pattern=self.config_dict["input_filename"],

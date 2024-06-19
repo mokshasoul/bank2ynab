@@ -14,8 +14,6 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
 ]
 dependencies = ["requests", "chardet", "pandas", "pdfplumber"]
@@ -28,17 +26,17 @@ maintainers = [
 dev = ["requirements-dev.txt"]
 
 [[project.authors]]
-name = "https://github.com/bank2ynab/bank2ynab/graphs/contributors"
+name = "Torben G-B"
 email = "torben@g-b.dk"
 
 [project.urls]
 Homepage = "https://github.com/bank2ynab/bank2ynab"
 
 [tool.hatch.version]
-path = "bank2ynab/__init__.py"
+path = "src/bank2ynab/__init__.py"
 
 [tool.hatch.build.targets.sdist]
-include = ["/bank2ynab"]
+include = ["src"]
 
 [tool.hatch.envs.dev]
 features = ["dev"]
@@ -47,7 +45,6 @@ features = ["dev"]
 # Same as Black.
 line-length = 88
 indent-width = 4
-# Assume Python 3.8
 target-version = "py311"
 
 [tool.ruff.lint]
@@ -96,7 +93,7 @@ mypy_path = "$MYPY_CONFIG_FILE_DIR/bank2ynab:$MYPY_CONFIG_FILE_DIR/typings"
 python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
-exclude = ["bank2ynab/plugins/*"]
+exclude = ["src/bank2ynab/plugins/*"]
 
 [[tool.mypy.overrides]]
 module = "bank2ynab.plugins.*"

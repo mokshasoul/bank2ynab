@@ -13,8 +13,33 @@ from bank2ynab.ynab_api_response import YNABError
 
 
 class APIInterface:
+    """
+    A class representing the API interface for interacting with the YNAB API.
+
+    Attributes:
+        budget_info (dict[str, dict]): A dictionary mapping budget IDs to budget parameters.
+        logger (logging.Logger): The logger object for logging messages.
+
+    Methods:
+        __init__(api_token: str): Initializes the APIInterface object.
+        access_api(budget_id: str, keyword: str, method: str, data: dict) -> dict: Accesses the YNAB API.
+        api_read(budget_id: str, keyword: str) -> Any: Reads data from the YNAB API.
+        post_transactions(budget_id: str, data: dict) -> None: Sends transaction data to the YNAB API.
+        get_budget_accounts(budget_id: str) -> dict[str, dict]: Retrieves account data for a budget.
+        get_budgets() -> dict[str, dict]: Retrieves budget data.
+
+    """
+
     def __init__(self, api_token: str) -> None:
-        # dict mapping {budget_id: {budget_params}}
+        """
+        Initializes the APIInterface object.
+
+        Args:
+            api_token (str): The API token to access the YNAB API.
+
+        Raises:
+            ValueError: If an empty API token is provided.
+        """
         self.budget_info: dict[str, dict] = {}
         self.logger = logging.getLogger("bank2ynab")
 
@@ -43,6 +68,21 @@ class APIInterface:
         method: str,
         data: dict,
     ) -> dict:
+        """
+        Accesses the YNAB API.
+
+        Args:
+            budget_id (str): The ID of the budget.
+            keyword (str): The keyword for the API endpoint.
+            method (str): The HTTP method to use (either "post" or "get").
+            data (dict): The data to send in the API request.
+
+        Returns:
+            dict: The response data from the API.
+
+        Raises:
+            YNABError: If the API response status code is >= 300.
+        """
         base_url = "https://api.youneedabudget.com/v1/budgets/"
         params = {"access_token": self.api_token}
 
@@ -68,6 +108,19 @@ class APIInterface:
         return response_data
 
     def api_read(self, *, budget_id: str, keyword: str) -> Any:
+        """
+        Reads data from the YNAB API.
+
+        Args:
+            budget_id (str): The ID of the budget.
+            keyword (str): The keyword for the API endpoint.
+
+        Returns:
+            Any: The response data from the API.
+
+        Raises:
+            YNABError: If there is an error accessing the API.
+        """
         return_data = {}
         try:
             return_data = self.access_api(
@@ -83,13 +136,15 @@ class APIInterface:
 
     def post_transactions(self, *, budget_id: str, data: dict) -> None:
         """
-        Send transaction data to YNAB via API call
+        Sends transaction data to YNAB via API call.
 
-        :param api_token: API token to access YNAB API
-        :param budget_id: id of budget to post transactions to
-        :param data: transaction data in json format
+        Args:
+            budget_id (str): The ID of the budget to post transactions to.
+            data (dict): The transaction data in JSON format.
+
+        Raises:
+            YNABError: If there is an error accessing the API.
         """
-
         self.logger.info("Uploading transactions to YNAB...")
         try:
             response = self.access_api(
@@ -108,21 +163,29 @@ class APIInterface:
 
     def get_budget_accounts(self, *, budget_id: str) -> dict[str, dict]:
         """
-        Returns dictionary matching account id to list of account parameters.
+        Retrieves account data for a budget.
 
-        :param api_token: API token to access YNAB API
-        :param budget_id: budget ID to read account data from
-        :return: dictionary mapping account id to parameters
+        Args:
+            budget_id (str): The ID of the budget.
+
+        Returns:
+            dict[str, dict]: A dictionary mapping account IDs to account parameters.
+
+        Raises:
+            YNABError: If there is an error accessing the API.
         """
         accounts = self.api_read(budget_id=budget_id, keyword="accounts")
         return APIInterface.fix_id_based_dicts(accounts)
 
     def get_budgets(self) -> dict[str, dict]:
         """
-        Returns dictionary matching budget id to list of budget parameters.
+        Retrieves budget data.
 
-        :param api_token: API token to access YNAB API
-        :return: dictionary mapping budget id to parameters
+        Returns:
+            dict[str, dict]: A dictionary mapping budget IDs to budget parameters.
+
+        Raises:
+            YNABError: If there is an error accessing the API.
         """
         budgets = self.api_read(budget_id="", keyword="budgets")
 
@@ -133,8 +196,11 @@ class APIInterface:
         """
         Combines response data JSON into a dictionary mapping ID to response data.
 
-        :param input_data: JSON-style dictionary
-        :return: dictionary mapping "id" to response data
+        Args:
+            input_data (dict): The JSON-style dictionary.
+
+        Returns:
+            dict[str, dict]: A dictionary mapping "id" to response data.
         """
         output_dict: dict[str, dict] = {}
         for sub_dict in input_data:
