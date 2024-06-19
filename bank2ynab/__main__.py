@@ -5,7 +5,7 @@ main bank2ynab module
 import importlib
 import argparse
 import logging
-from pathlib import Path
+import pathlib
 from typing import Any, Dict, List
 
 from bank2ynab.bank_handler import BankHandler
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     try:
         config_handler = ConfigHandler(
-            project_dir=Path(__file__).resolve().parent.parent
+            project_dir=pathlib.Path(__file__).resolve().parent.parent
         )
     except FileNotFoundError:
         logger.error("No configuration file found, process aborted.")
@@ -65,16 +65,17 @@ if __name__ == "__main__":
             bank_obj_list.append(bank_object)
 
         # initialize variables for summary:
-        files_processed = 0
+        FILES_PROCESSED = 0
         bank_transaction_dict: Dict[str, list] = {}
 
         # process account for each config entry
-        for bank_object in bank_obj_list:
+        for bank_object in enumerate(bank_obj_list):
             bank_object.run()
             if bank_object.transaction_list:
                 bank_transaction_dict[bank_object.name] = bank_object.transaction_list
-            files_processed += bank_object.files_processed
-        logger.info("File processing complete! %s files processed.", files_processed)
+            FILES_PROCESSED += bank_object.files_processed
+
+        logger.info("File processing complete! %s files processed.", FILES_PROCESSED)
 
         if bank_transaction_dict:
             api = YNAB_API(config_handler)
