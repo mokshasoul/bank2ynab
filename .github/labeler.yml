@@ -26,7 +26,7 @@ INCLUSION_ERROR:
   - ./user_configuration.conf
 api:
   - bank2ynab/ynab_api.py
-bank_process:  
+bank_process:
   - bank2ynab/bank_process.py
 utilities:
-  - bank2ynab/b2y_utilities.py  
+  - bank2ynab/b2y_utilities.py

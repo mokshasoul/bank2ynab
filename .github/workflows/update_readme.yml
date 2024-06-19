@@ -6,24 +6,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-        - name: Check out Git repository
-          uses: actions/checkout@master
-          with:
-            ref: ${{ github.event.pull_request.head.ref }}
+      - name: Check out Git repository
+        uses: actions/checkout@master
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
-        - name: Set up Python
-          uses: actions/setup-python@master
-          with:
-            python-version: 3.8
+      - name: Set up Python
+        uses: actions/setup-python@master
+        with:
+          python-version: 3.8
 
-        - name: Update README.md
-          id: update_readme
-          uses: bank2ynab/bank2ynab-update-readme@master
+      - name: Update README.md
+        id: update_readme
+        uses: bank2ynab/bank2ynab-update-readme@master
 
-        - name: Commit and push changes
-          run: |
-            git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git config --local user.name "github-actions[bot]"
-            git add -A
-            git diff-index --quiet HEAD || git commit -m "Automated update to README.md" -a
-            git push
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Automated update to README.md" -a
+          git push

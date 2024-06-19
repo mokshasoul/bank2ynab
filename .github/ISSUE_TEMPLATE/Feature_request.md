@@ -1,19 +1,20 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-
 ---
 
-*Dear submitter, please edit the following according to your needs. Thank you!*
+_Dear submitter, please edit the following according to your needs. Thank you!_
 
 **New bank format**
-*If you're submitting something else, skip or remove this section and continue below.*
+_If you're submitting something else, skip or remove this section and continue below._
+
 - Full name of the bank: ...
 - Country (2-character country code): ...
 - Any special requirements: ...
 
-*Bank format: only fill out these lines if you're comfortable with it, otherwise skip:*
-*To be filled in as required. Delete fields that match default values.*
+_Bank format: only fill out these lines if you're comfortable with it, otherwise skip:_
+_To be filled in as required. Delete fields that match default values._
+
 ```
 Source Filename Pattern = my_export_filename
 Source Filename Extension = .csv
