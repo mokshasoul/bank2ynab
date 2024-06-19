@@ -1,4 +1,0 @@
-requests
-chardet
-pandas
-pdfplumber
