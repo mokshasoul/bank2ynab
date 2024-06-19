@@ -1,6 +1,7 @@
 """
-    main bank2ynab module
+main bank2ynab module
 """
+
 import importlib
 import argparse
 import logging

@@ -1,6 +1,7 @@
 """
-    bank2ynab API acess
+bank2ynab API acess
 """
+
 from __future__ import annotations
 
 import logging

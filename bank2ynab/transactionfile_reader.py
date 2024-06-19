@@ -1,6 +1,7 @@
 """
-    Transaction file reader
+Transaction file reader
 """
+
 from __future__ import annotations
 
 import codecs

@@ -1,9 +1,10 @@
 # Plugin for handling format of Handelsbanken [SE] bank export files
 """
-    Strip HTML from input file, allowing it to be used by main script
-    With thanks to @joacand's script from here:
-    github.com/joacand/HandelsbankenYNABConverter/blob/master/Converter.py
+Strip HTML from input file, allowing it to be used by main script
+With thanks to @joacand's script from here:
+github.com/joacand/HandelsbankenYNABConverter/blob/master/Converter.py
 """
+
 from __future__ import annotations
 
 import csv

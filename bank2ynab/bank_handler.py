@@ -1,6 +1,7 @@
 """
-    Bank handling module
+Bank handling module
 """
+
 from __future__ import annotations
 
 import logging
